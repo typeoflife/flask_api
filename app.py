@@ -67,6 +67,11 @@ def create_user():
         response = jsonify({'success': False, 'error': er.message})
         response.status_code = 400
         return response
+    if User.query.filter_by(username=user_data['username']).first() or User.query.filter_by(
+            email=user_data['email']).first():
+        response = jsonify({'status': 'Username or email is exists'})
+        response.status_code = 400
+        return response
     new_user = User(**user_data)
     new_user.set_password(request.json['password'])
     db.session.add(new_user)
